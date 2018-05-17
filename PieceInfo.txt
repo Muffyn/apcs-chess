@@ -1,1 +1,40 @@
+Piece
 
+   static ArrayList<Position> getPositions(Position position, int direction, int spaces)
+      returns an ArrayList of positions given a starting point, a direction (you can use the final static ints given), and the number of spaces 
+  
+  static Position getPosition(Position position, int direction)
+      does the same as above but one returns the nearest position
+      
+  static ArrayList<Piece> reverse(ArrayList<Piece> pieces)
+      reverses (flips) all of the pieces in the ArrayList
+  
+  static boolean inBounds(Position position)
+      checks if the positions is in bounds of the board
+      
+  Piece(int x, int y)
+      constructor given x and y values 
+  
+  Piece(Position position)
+      constructor given a position
+      
+  Piece reverse() *Must be overridden in subclasses
+      returns a reversed (flipped) non-reference Piece object of this
+  
+  boolean move(Position position, ArrayList<Piece> enemies)
+      if this piece can move to the position given then this moves to that position
+  
+  ArrayList<Position> getPossiblePositions()
+      returns reference of the possiblePossible of this (all fields if any must be equal)
+  
+  void setPossiblePositions(ArrayList<Position> positions)
+      sets possiblePositions to positions
+  
+  abstract ArrayList<Position> setPossiblePositions(ArrayList<Piece> allies, ArrayList<Piece> enemies)
+      sets possibleSolutions given allies and enemies and returns a reference of possibleSolutions
+      
+#################################################################################
+
+format for images of pieces (ClassName_White.png & ClassName_Black.png)
+
+#################################################################################
