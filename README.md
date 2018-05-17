@@ -53,6 +53,7 @@ This procedure assumes you have already created a repository on GitHub, or have 
 format for images of pieces (ClassName_White.png & ClassName_Black.png)
 
 #################################################################################
+
 Piece
 
    static ArrayList<Position> getPositions(Position position, int direction, int spaces)
