@@ -1,5 +1,3 @@
-package chess;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -13,7 +11,6 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import pieces.*;
 
 enum Player {
 	PLAYER1("White"), PLAYER2("Black");
@@ -26,8 +23,8 @@ enum Player {
 		pieces= new ArrayList<Piece>();
 	}
 	
-	public Player getNext(Player player) {
-		switch(player) {
+	public Player getNext() {
+		switch(this) {
 		case PLAYER1:
 			return PLAYER2;
 		default:
@@ -41,6 +38,10 @@ enum Player {
 	
 	public ArrayList<Piece> getPieces() {
 		return pieces;
+	}
+	
+	public void setPieces(ArrayList<Piece> pieces) {
+		this.pieces= pieces;
 	}
 }
 
@@ -82,8 +83,11 @@ public class Chess extends JPanel {
 	
 	public Chess() {
 		player= Player.PLAYER1;
-		player.getPieces().add(new Rook(5, 5));
-		player.getPieces().add(new Rook(4, 5));
+		
+		for(Piece piece : player.getPieces()) {
+			piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces());
+			piece.checkPossiblePositions(player.getPieces(), player.getNext().getPieces());
+		}
 		
 		addMouseListener(new MouseListener()
 		{
@@ -98,10 +102,10 @@ public class Chess extends JPanel {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				Point p = getMousePosition();
+				Point point = getMousePosition();
 				int squareLength = getHeight() / 8;
-				int positionX = (int)(p.getX() - (getWidth() / 2 - squareLength * 4)) / squareLength;
-				int positionY = (int)(p.getY() / squareLength);
+				int positionX = (int)(point.getX() - (getWidth() / 2 - squareLength * 4)) / squareLength;
+				int positionY = (int)(point.getY() / squareLength);
 				Position position= new Position(positionX, positionY);
 				if(e.getButton() == MouseEvent.BUTTON1)
 			    {
@@ -110,12 +114,23 @@ public class Chess extends JPanel {
 					if(index >= 0)
 					{
 						selectedPiece= pieces.get(index);
-						selectedPiece.setPossiblePositions(player.getPieces(), player.getNext(player).getPieces());
 					}
 					else { 
 						if(selectedPiece != null)
 						{
-							selectedPiece.move(position, player.getNext(player).getPieces());
+							if(selectedPiece.move(position, player.getNext().getPieces())) {
+								for(Player p : Player.values()) {
+									p.setPieces(Piece.reverse(p.getPieces()));
+								}
+								
+								player= player.getNext();
+								int totalPossiblePositions= 0;
+								for(Piece piece : player.getPieces()) {
+									piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces());
+									piece.checkPossiblePositions(player.getPieces(), player.getNext().getPieces());
+									totalPossiblePositions+= piece.getPossiblePositions().size();
+								}
+							}
 							selectedPiece= null;
 						}
 					}
