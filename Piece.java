@@ -1,14 +1,13 @@
-package pieces;
 
 import java.util.ArrayList;
 
-public class Piece extends Position{
+public abstract class Piece extends Position{
 	private ArrayList<Position> possiblePositions;
 	
 	public static final int UP= 		0;
 	public static final int UP_RIGHT= 	1;
 	public static final int RIGHT= 		2;
-	public static final int DOWN_RIGHT= 3;
+	public static final int DOWN_RIGHT= 	3;
 	public static final int DOWN= 		4;
 	public static final int DOWN_LEFT= 	5;
 	public static final int LEFT= 		6;
@@ -20,13 +19,34 @@ public class Piece extends Position{
 		int x= 0;
 		int y= 0;
 		
-		if(direction % 4 == 0) {
-			y= direction < 4 ? -1 : 1;
-		} else if(direction % 2 == 0) {
-			x= direction < 4 ? 1 : -1;
-		} else {
-			x= direction < 4 ? 1 : -1;
-			y= direction % 3 == 1 ? -1 : 1;
+		switch(direction) {
+		case 0:
+			y= -1;
+			break;
+		case 1:
+			y= -1;
+			x= 1;
+			break;
+		case 2:
+			x= 1;
+			break;
+		case 3:
+			y= 1;
+			x= 1;
+			break;
+		case 4:
+			y= 1;
+			break;
+		case 5:
+			y= 1;
+			x= -1;
+			break;
+		case 6:
+			x= -1;
+			break;
+		default:
+			y= -1;
+			x= -1;
 		}
 				
 		for(int i= 0; i < spaces; i++) {
@@ -41,7 +61,10 @@ public class Piece extends Position{
 	
 	public static Position getPosition(Position position, int direction) {
 		ArrayList<Position> positions= getPositions(position, direction, 1);
-		return positions.size() > 0 ? positions.get(0) : null;
+		if(positions.size() > 0) {
+			return positions.get(0);
+		}
+		return null;
 	}
 	
 	public static ArrayList<Piece> reverse(ArrayList<Piece> pieces) {
@@ -56,10 +79,6 @@ public class Piece extends Position{
 		return position.getX() >= 0 && position.getY() >= 0 && position.getX() < 8 && position.getY() < 8;
 	}
 	
-	public Piece() {
-		this(0, 0);
-	}
-	
 	public Piece(int x, int y) {
 		super(x, y);
 		setPossiblePositions(new ArrayList<Position>());
@@ -67,6 +86,15 @@ public class Piece extends Position{
 	
 	public Piece(Position position) {
 		this(position.getX(), position.getY());
+	}
+	
+	public Piece reverse() {
+		return new Piece(super.reverse()) {
+			@Override
+			public ArrayList<Position> setPossiblePositions(ArrayList<Piece> allies, ArrayList<Piece> enemies) {
+				return null;
+			}
+		};
 	}
 	
 	public boolean move(Position position, ArrayList<Piece> enemies) {
@@ -78,28 +106,29 @@ public class Piece extends Position{
 		return false;
 	}
 	
-	public Piece reverse() {
-		return new Piece(super.reverse());
-	}
-	
-	public void checkPositions(ArrayList<Piece> allies, ArrayList<Piece> enemies) {		
-		allies= reverse(allies);
-		enemies= reverse(enemies);
+	public void checkPossiblePositions(ArrayList<Piece> allies, ArrayList<Piece> enemies) {		
+		ArrayList<Piece> reverseAllies= reverse(allies);
+		ArrayList<Piece> reverseEnemies= reverse(enemies);
 		
-		Position thisPosition= allies.get(allies.indexOf(reverse()));		
-		final Position KING= allies.get(0);
+		Position thisPosition= reverseAllies.get(reverseAllies.indexOf(reverse()));		
+		Position King= reverseAllies.get(0);
 		
 		for(int i= possiblePositions.size() - 1; i >= 0; i--) {
 			thisPosition.set(possiblePositions.get(i).reverse());
-			for(Piece piece : enemies) {
+			for(Piece piece : reverseEnemies) {
 				if(!piece.equals(thisPosition)) {
-					if(piece.setPossiblePositions(enemies, allies).contains(KING)) {
+					if(piece.setPossiblePositions(reverseEnemies, reverseAllies).contains(King)) {
 						possiblePositions.remove(i);
 						break;
 					}
 				}
 			}
 		}
+	}
+	
+	public ArrayList<Position> clearPossiblePositions() {
+		possiblePositions.clear();
+		return possiblePositions;
 	}
 	
 	public ArrayList<Position> getPossiblePositions() {
@@ -110,8 +139,5 @@ public class Piece extends Position{
 		possiblePositions= positions;
 	}
 	
-	public ArrayList<Position> setPossiblePositions(ArrayList<Piece> allies, ArrayList<Piece> enemies) {
-		possiblePositions= new ArrayList<Position>();
-		return possiblePositions;
-	}
+	public abstract ArrayList<Position> setPossiblePositions(ArrayList<Piece> allies, ArrayList<Piece> enemies);
 }
