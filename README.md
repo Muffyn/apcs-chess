@@ -50,9 +50,9 @@ This procedure assumes you have already created a repository on GitHub, or have 
 
 #################################################################################
 
-**Piece
-  
-  *static ArrayList<Position> getPositions(Position position, int direction, int spaces)
+Piece
+
+   static ArrayList<Position> getPositions(Position position, int direction, int spaces)
       returns an ArrayList of positions given a starting point, a direction (you can use the final static ints given), and the number of spaces 
   
   *static Position getPosition(Position position, int direction)
