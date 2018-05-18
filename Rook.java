@@ -39,6 +39,5 @@ public class Rook extends Piece
 		}// end for
 		
 		return positions;
-	
 	}	
 }
