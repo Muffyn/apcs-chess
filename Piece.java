@@ -111,13 +111,13 @@ public abstract class Piece extends Position{
 		ArrayList<Piece> reverseEnemies= reverse(enemies);
 		
 		Position thisPosition= reverseAllies.get(reverseAllies.indexOf(reverse()));		
-		Position King= reverseAllies.get(0);
+		Position king= reverseAllies.get(0);
 		
 		for(int i= possiblePositions.size() - 1; i >= 0; i--) {
 			thisPosition.set(possiblePositions.get(i).reverse());
 			for(Piece piece : reverseEnemies) {
 				if(!piece.equals(thisPosition)) {
-					if(piece.setPossiblePositions(reverseEnemies, reverseAllies).contains(King)) {
+					if(piece.setPossiblePositions(reverseEnemies, reverseAllies).contains(king)) {
 						possiblePositions.remove(i);
 						break;
 					}
