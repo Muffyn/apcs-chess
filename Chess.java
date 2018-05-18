@@ -86,7 +86,7 @@ public class Chess extends JPanel {
 		
 		for(Piece piece : player.getPieces()) {
 			piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces());
-			piece.checkPossiblePositions(player.getPieces(), player.getNext().getPieces());
+			//piece.checkPossiblePositions(player.getPieces(), player.getNext().getPieces());
 		}
 		
 		addMouseListener(new MouseListener()
@@ -127,7 +127,7 @@ public class Chess extends JPanel {
 								int totalPossiblePositions= 0;
 								for(Piece piece : player.getPieces()) {
 									piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces());
-									piece.checkPossiblePositions(player.getPieces(), player.getNext().getPieces());
+									//piece.checkPossiblePositions(player.getPieces(), player.getNext().getPieces());
 									totalPossiblePositions+= piece.getPossiblePositions().size();
 								}
 							}
