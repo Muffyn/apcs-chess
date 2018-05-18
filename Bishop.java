@@ -7,15 +7,21 @@ public class Bishop extends Piece{
 	
 	public Bishop(int x, int y) {
 		super(new Position(x,y));
-		position.set(x,y);
 		// TODO Auto-generated constructor stub
+	}
+	
+	public Bishop(Position position) {
+		super(position);
+	}
+	
+	public Bishop reverse() {
+		return new Bishop(super.reverse());
 	}
 	
 	@Override
 	public ArrayList<Position> setPossiblePositions(ArrayList<Piece> allies, ArrayList<Piece> enemies) {
 		// TODO Auto-generated method stub
-		ArrayList<Position> returned = new ArrayList<Position>();
-		
+		ArrayList<Position> returned = super.getPossiblePositions();
 		
 		for (Piece ally : allies)
 		{
@@ -25,28 +31,29 @@ public class Bishop extends Piece{
 				{
 					//If there are no allies on the tile, and position is in bounds, add it to the list. Stop checking if an enemy is found
 					//Up Right
-					if (ally.getX() != this.getX()+x && ally.getY() != this.getY()+x && super.inBounds(new Position(this.getX()+x, this.getY()+x)) && !sur)
+					if (this.getX() != this.getX()+x && this.getY() != this.getY()+x && ally.getX() != this.getX()+x && ally.getY() != this.getY()+x && super.inBounds(new Position(this.getX()+x, this.getY()+x)) && !sur)
 					{
 						returned.add(new Position(this.getX()+x, this.getY()+x));
 						if (enemy.getX() == this.getX()+x && enemy.getY() == this.getY()+x) //The location an enemy is in has already been added, stop checking after it
 							sur = true;
 					}
 					//Up Left
-					if (ally.getX() != this.getX()-x && ally.getY() != this.getY()+x && super.inBounds(new Position(this.getX()-x, this.getY()+x)) && !sul)
+					if (this.getX() != this.getX()+x && this.getY() != this.getY()+x && ally.getX() != this.getX()-x && ally.getY() != this.getY()+x && super.inBounds(new Position(this.getX()-x, this.getY()+x)) && !sul)
 					{
 						returned.add(new Position(this.getX()-x, this.getY()+x));
 						if (enemy.getX() == this.getX()+x && enemy.getY() == this.getY()+x)
 							sul = true;
 					}
+					
 					//Down Right
-					if (ally.getX() != this.getX()+x && ally.getY() != this.getY()-x && super.inBounds(new Position(this.getX()+x, this.getY()-x)) && !sdr)
+					if (this.getX() != this.getX()+x && this.getY() != this.getY()+x && ally.getX() != this.getX()+x && ally.getY() != this.getY()-x && super.inBounds(new Position(this.getX()+x, this.getY()-x)) && !sdr)
 					{
 						returned.add(new Position(this.getX()+x, this.getY()-x));
 						if (enemy.getX() == this.getX()+x && enemy.getY() == this.getY()+x)
 							sdr = true;
 					}
 					//Down Left
-					if (ally.getX() != this.getX()-x && ally.getY() != this.getY()-x && super.inBounds(new Position(this.getX()-x, this.getY()-x)) && !sdl)
+					if (this.getX() != this.getX()+x && this.getY() != this.getY()+x && ally.getX() != this.getX()-x && ally.getY() != this.getY()-x && super.inBounds(new Position(this.getX()-x, this.getY()-x)) && !sdl)
 					{
 						returned.add(new Position(this.getX()-x, this.getY()-x));
 						if (enemy.getX() == this.getX()+x && enemy.getY() == this.getY()+x)
@@ -55,6 +62,12 @@ public class Bishop extends Piece{
 				}
 			}
 		}
+		/*
+		for (Position x : returned)
+		{
+			System.out.println("(" + x.getX() +"," + x.getY() + ")");
+		}
+		*/
 		return returned;
 	}
 
