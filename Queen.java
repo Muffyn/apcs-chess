@@ -11,7 +11,7 @@ public class Queen extends Piece {
 	}
 	
 	public Queen reverse() {
-		return new Queen(this);
+		return new Queen(super.reverse());
 	}
 	
 	public ArrayList<Position> setPossiblePositions(ArrayList<Piece> allies, ArrayList<Piece> enemies) {

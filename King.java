@@ -1,4 +1,3 @@
-package pieces;
 
 import java.util.ArrayList;
 
@@ -13,7 +12,7 @@ public class King extends Piece
 	}
 	
 	public King reverse() {
-		return new King(this);
+		return new King(super.reverse());
 	}
 	
 	@Override

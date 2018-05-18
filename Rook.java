@@ -14,7 +14,7 @@ public class Rook extends Piece
 	
 	public Rook reverse()
 	{
-		return new Rook(this);
+		return new Rook(super.reverse());
 	}
 
 	@Override

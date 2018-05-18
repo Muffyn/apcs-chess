@@ -55,10 +55,10 @@ public class Chess extends JPanel {
 	public static void drawBoard(Graphics g, int length, int translation) {
 		for(int x= 0; x < 8; x++) {
 			for(int y= 0; y < 8; y++) {
-				if((x + y) % 2 == 0) {
-					g.setColor(Color.DARK_GRAY.darker().darker());
+				if((x + y) % 2 == 1) {
+					g.setColor(Color.DARK_GRAY);
 				} else {
-					g.setColor(Color.WHITE);
+					g.setColor(Color.WHITE.darker());
 				}
 				g.fill3DRect(length * x + translation, length * y, length - 1, length - 1, true);
 			}
@@ -83,6 +83,8 @@ public class Chess extends JPanel {
 	
 	public Chess() {
 		player= Player.PLAYER1;
+		
+		setPieces();
 		
 		for(Piece piece : player.getPieces()) {
 			piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces());
@@ -165,6 +167,28 @@ public class Chess extends JPanel {
 		}
 		
 		repaint();
+	}
+	
+	public void setPieces() {
+		ArrayList<Piece> whitePieces= player.PLAYER1.getPieces();
+		ArrayList<Piece> blackPieces= player.PLAYER2.getPieces();
+		
+		whitePieces.add(new King(4, 7));
+		blackPieces.add(new King(4, 0));
+		
+		whitePieces.add(new Queen(3, 7));
+		blackPieces.add(new Queen(3, 0));
+		
+		whitePieces.add(new Rook(0, 7));
+		whitePieces.add(new Rook(7, 7));
+		blackPieces.add(new Rook(0, 0));
+		blackPieces.add(new Rook(7, 0));
+		
+		whitePieces.add(new Bishop(2, 7));
+		whitePieces.add(new Bishop(5, 7));
+		blackPieces.add(new Bishop(2, 0));
+		blackPieces.add(new Bishop(5, 0));
+
 	}
 	
 	public static void main(String[] args) {
