@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 enum Player {
@@ -46,30 +48,55 @@ enum Player {
 }
 
 public class Chess extends JPanel {
-
+	
 	private final static int PIECE_SCALE= 6;
 	private final static int MARKER_SCALE= 6;
 	private Player player;
 	private Piece selectedPiece;
+	private boolean inCheck;
 	
+	private JLabel label;
+	
+	/**
+	 * Draws the board
+	 * @param g
+	 * @param length
+	 * @param translation
+	 */
 	public static void drawBoard(Graphics g, int length, int translation) {
 		for(int x= 0; x < 8; x++) {
 			for(int y= 0; y < 8; y++) {
 				if((x + y) % 2 == 1) {
-					g.setColor(Color.DARK_GRAY);
+					g.setColor(Color.DARK_GRAY.brighter());
 				} else {
-					g.setColor(Color.WHITE.darker());
+					g.setColor(Color.GRAY.brighter());
 				}
-				g.fill3DRect(length * x + translation, length * y, length - 1, length - 1, true);
+				g.fill3DRect(length * x + translation, length * y, length + 1, length + 1, true);
 			}
 		}
 	}
 	
+	/**
+	 * Draws a marker at a given position
+	 * @param g
+	 * @param position
+	 * @param color
+	 * @param length
+	 * @param translation
+	 */
 	public static void drawMarker(Graphics g, Position position, Color color, int length, int translation) {
 		g.setColor(color);
-		g.fill3DRect(length * position.getX() + translation, length * position.getY(), (length - 1) / MARKER_SCALE, (length - 1) / MARKER_SCALE, true);
+		g.fillRect(length * position.getX() + translation, length * position.getY(), (length - 1) / MARKER_SCALE + 1, (length - 1) / MARKER_SCALE + 1);
 	}
 	
+	/**
+	 * Draws all of the piece
+	 * @param pieces
+	 * @param g
+	 * @param color
+	 * @param length
+	 * @param translation
+	 */
 	public static void drawPieces(ArrayList<Piece> pieces, Graphics g, String color, int length, int translation) {
 		pieces.forEach(piece -> {
 			Image img= null;
@@ -82,14 +109,18 @@ public class Chess extends JPanel {
 	}
 	
 	public Chess() {
+		
 		player= Player.PLAYER1;
 		
 		setPieces();
 		
 		for(Piece piece : player.getPieces()) {
 			piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces());
-			//piece.checkPossiblePositions(player.getPieces(), player.getNext().getPieces());
 		}
+		
+		label= new JLabel();
+		label.setText(player + "\'s turn");
+		add(label);
 		
 		addMouseListener(new MouseListener()
 		{
@@ -105,42 +136,70 @@ public class Chess extends JPanel {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				Point point = getMousePosition();
-				int squareLength = getHeight() / 8;
-				int positionX = (int)(point.getX() - (getWidth() / 2 - squareLength * 4)) / squareLength;
-				int positionY = (int)(point.getY() / squareLength);
-				Position position= new Position(positionX, positionY);
-				if(e.getButton() == MouseEvent.BUTTON1)
-			    {
-					ArrayList<Piece> pieces= player.getPieces();
-					int index= pieces.indexOf(position);
-					if(index >= 0)
-					{
-						selectedPiece= pieces.get(index);
-					}
-					else { 
-						if(selectedPiece != null)
+				if(point != null) {
+					int squareLength = getHeight() / 8;
+					int positionX = (int)(point.getX() - (getWidth() / 2 - squareLength * 4)) / squareLength;
+					int positionY = (int)(point.getY() / squareLength);
+					Position position= new Position(positionX, positionY);
+					if(e.getButton() == MouseEvent.BUTTON1)
+				    {
+						ArrayList<Piece> pieces= player.getPieces();
+						int index= pieces.indexOf(position);
+						if(index >= 0 && pieces.get(index).getPossiblePositions().size() > 0)
 						{
-							if(selectedPiece.move(position, player.getNext().getPieces())) {
-								for(Player p : Player.values()) {
-									p.setPieces(Piece.reverse(p.getPieces()));
-								}
-								
-								player= player.getNext();
-								int totalPossiblePositions= 0;
-								for(Piece piece : player.getPieces()) {
-									piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces());
-									//piece.checkPossiblePositions(player.getPieces(), player.getNext().getPieces());
-									totalPossiblePositions+= piece.getPossiblePositions().size();
-								}
-							}
-							selectedPiece= null;
+							selectedPiece= pieces.get(index);
+							repaint();
 						}
-					}
-			    }
-			    else if(e.getButton() == MouseEvent.BUTTON3)
-			    {
-			        selectedPiece= null;
-			    }
+						else { 
+							if(selectedPiece != null)
+							{
+								if(selectedPiece.move(position, player.getNext().getPieces())) {
+									
+									//Checks to see if the next player is in check
+									inCheck= false;
+									for(Piece piece : player.getPieces()) {
+										if(piece.setPossiblePositions(pieces, player.getNext().getPieces())
+												.contains(player.getNext().getPieces().get(0))) {
+											inCheck= true;
+											break;
+										}
+									}
+									
+									//Reverses all of the pieces
+									for(Player p : Player.values()) {
+										p.setPieces(Piece.reverse(p.getPieces()));
+									}
+									
+									//Sets up for the next player's turn
+									player= player.getNext();
+									int totalPossiblePositions= 0;
+									for(Piece piece : player.getPieces()) {
+										piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces());
+										piece.checkPossiblePositions(player.getPieces(), player.getNext().getPieces());
+										totalPossiblePositions+= piece.getPossiblePositions().size();
+									}
+									label.setText(player + "\'s turn");
+									
+									//Ends the game
+									if(totalPossiblePositions == 0) {
+										if(inCheck) {
+											System.out.print(player.getNext() + " wins");
+										} else {
+											System.out.print("It's a tie");
+										}
+									}
+								}
+								selectedPiece= null;
+							}
+							repaint();
+						}
+				    }
+				    else if(e.getButton() == MouseEvent.BUTTON3)
+				    {
+				        selectedPiece= null;
+				        repaint();
+				    }
+				}
 			}
 
 			@Override
@@ -149,9 +208,12 @@ public class Chess extends JPanel {
 	}
 	
 	public void paintComponent(Graphics g) {
-		super.repaint();
+		super.paintComponent(g);
 		int length= getHeight() / 8;
 		int translation= getWidth() / 2 - (length * 4);
+		
+		label.setBounds(5, 0, translation, translation / 5);
+		label.setFont(new Font(null, 0, translation / 8));
 		
 		drawBoard(g, length, translation);
 		
@@ -159,19 +221,30 @@ public class Chess extends JPanel {
 			drawPieces(p.getPieces(), g, p.getColor(), length, translation);
 		}
 		
+		if(inCheck) {
+			drawMarker(g, player.getPieces().get(0), Color.MAGENTA, length, translation);
+		}
+		
 		if(selectedPiece != null) {
 			drawMarker(g, selectedPiece, Color.BLUE, length, translation);
 			selectedPiece.getPossiblePositions().forEach(position -> {
-				drawMarker(g, position, Color.GREEN, length, translation);
+				if(player.getNext().getPieces().contains(position)) {
+					drawMarker(g, position, Color.RED, length, translation);
+				} else {
+					drawMarker(g, position, Color.GREEN, length, translation);
+				}
 			});
 		}
-		
-		repaint();
 	}
 	
+	/**
+	 * Adds all of the pieces to their original positions
+	 */
 	public void setPieces() {
-		ArrayList<Piece> whitePieces= player.PLAYER1.getPieces();
-		ArrayList<Piece> blackPieces= player.PLAYER2.getPieces();
+		ArrayList<Piece> whitePieces= Player.PLAYER1.getPieces();
+		ArrayList<Piece> blackPieces= Player.PLAYER2.getPieces();
+		
+		//Note: Kings must be added first
 		
 		whitePieces.add(new King(4, 7));
 		blackPieces.add(new King(4, 0));
