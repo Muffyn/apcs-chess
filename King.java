@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+private boolean wasMoved;
 
 public class King extends Piece
 {
@@ -10,7 +11,12 @@ public class King extends Piece
 	public King(Position pos) {
 		super(pos);
 	}
-	
+	public void setWasMoved(boolean moved){
+		wasMoved = moved;
+	}
+	public boolean getWasMoved(){
+		wasMoved = true;
+	}
 	public King reverse() {
 		return new King(super.reverse());
 	}
@@ -32,5 +38,20 @@ public class King extends Piece
 			}
 		}
 		return positions;
+	}
+	
+	public boolean willBeInCheck(Position position, ArrayList<Piece> enemies){
+		for(Piece enemy: enemies){
+			if(enemy.getPossiblePositions().contains(position)){
+				return true;
+			}
+		}
+		return false;
+	}
+	public boolean inCheck(ArrayList<Pieces>){
+		if(enemies.getPossiblePositions.contains(this.getPosition))
+			return true;
+		else
+			return false;
 	}
 }
