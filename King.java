@@ -15,7 +15,7 @@ public class King extends Piece
 		wasMoved = moved;
 	}
 	public boolean getWasMoved(){
-		wasMoved = true;
+		return wasMoved;
 	}
 	public King reverse() {
 		return new King(super.reverse());
