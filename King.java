@@ -1,9 +1,10 @@
 
 import java.util.ArrayList;
-private boolean wasMoved;
 
 public class King extends Piece
 {
+	private boolean wasMoved;
+	
 	public King(int x, int y) {
 		super(x, y);
 	}

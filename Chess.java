@@ -81,7 +81,7 @@ public class Chess extends JPanel {
 		});
 	}
 	
-	public Chess() {
+	public Chess(boolean multiplayer) {
 		player= Player.PLAYER1;
 		
 		setPieces();
@@ -90,6 +90,8 @@ public class Chess extends JPanel {
 			piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces());
 			//piece.checkPossiblePositions(player.getPieces(), player.getNext().getPieces());
 		}
+		
+		AI computer = new AI();
 		
 		addMouseListener(new MouseListener()
 		{
@@ -105,42 +107,66 @@ public class Chess extends JPanel {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				Point point = getMousePosition();
-				int squareLength = getHeight() / 8;
-				int positionX = (int)(point.getX() - (getWidth() / 2 - squareLength * 4)) / squareLength;
-				int positionY = (int)(point.getY() / squareLength);
-				Position position= new Position(positionX, positionY);
-				if(e.getButton() == MouseEvent.BUTTON1)
-			    {
-					ArrayList<Piece> pieces= player.getPieces();
-					int index= pieces.indexOf(position);
-					if(index >= 0)
-					{
-						selectedPiece= pieces.get(index);
-					}
-					else { 
-						if(selectedPiece != null)
+				
+				if(point != null) {
+				
+					int squareLength = getHeight() / 8;
+					int positionX = (int)(point.getX() - (getWidth() / 2 - squareLength * 4)) / squareLength;
+					int positionY = (int)(point.getY() / squareLength);
+					Position position= new Position(positionX, positionY);
+					if(e.getButton() == MouseEvent.BUTTON1)
+				    {
+						ArrayList<Piece> pieces= player.getPieces();
+						int index= pieces.indexOf(position);
+						if(index >= 0)
 						{
-							if(selectedPiece.move(position, player.getNext().getPieces())) {
-								for(Player p : Player.values()) {
-									p.setPieces(Piece.reverse(p.getPieces()));
-								}
-								
-								player= player.getNext();
-								int totalPossiblePositions= 0;
-								for(Piece piece : player.getPieces()) {
-									piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces());
-									//piece.checkPossiblePositions(player.getPieces(), player.getNext().getPieces());
-									totalPossiblePositions+= piece.getPossiblePositions().size();
-								}
-							}
-							selectedPiece= null;
+							selectedPiece= pieces.get(index);
 						}
-					}
-			    }
-			    else if(e.getButton() == MouseEvent.BUTTON3)
-			    {
-			        selectedPiece= null;
-			    }
+						else { 
+							if(selectedPiece != null)
+							{
+								if(selectedPiece.move(position, player.getNext().getPieces())) {
+									for(Player p : Player.values()) {
+										p.setPieces(Piece.reverse(p.getPieces()));
+									}
+									
+									if(!multiplayer) {
+										computer.move();
+										
+										for(Player p : Player.values())
+											p.setPieces(Piece.reverse(p.getPieces()));
+										
+										player = player.PLAYER1;
+										
+										int totalPossiblePositions= 0;
+										for(Piece piece : player.getPieces()) {
+											piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces());
+											//piece.checkPossiblePositions(player.getPieces(), player.getNext().getPieces());
+											totalPossiblePositions+= piece.getPossiblePositions().size();
+										}
+									}
+									
+									else {
+										
+										player= player.getNext();
+										int totalPossiblePositions= 0;
+										for(Piece piece : player.getPieces()) {
+											piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces());
+											//piece.checkPossiblePositions(player.getPieces(), player.getNext().getPieces());
+											totalPossiblePositions+= piece.getPossiblePositions().size();
+										}
+									
+									}
+								}
+								selectedPiece= null;
+							}
+						}
+				    }
+				    else if(e.getButton() == MouseEvent.BUTTON3)
+				    {
+				        selectedPiece= null;
+				    }
+				}
 			}
 
 			@Override
@@ -173,8 +199,8 @@ public class Chess extends JPanel {
 		ArrayList<Piece> whitePieces= player.PLAYER1.getPieces();
 		ArrayList<Piece> blackPieces= player.PLAYER2.getPieces();
 		
-		whitePieces.add(new King(4, 7));
-		blackPieces.add(new King(4, 0));
+		//whitePieces.add(new King(4, 7));
+		//blackPieces.add(new King(4, 0));
 		
 		whitePieces.add(new Queen(3, 7));
 		blackPieces.add(new Queen(3, 0));
@@ -193,7 +219,7 @@ public class Chess extends JPanel {
 	
 	public static void main(String[] args) {
 		JFrame frame= new JFrame();
-		frame.add(new Chess());
+		frame.add(new Chess(false));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setBounds(100, 100, 450, 300);
 		frame.setVisible(true);
