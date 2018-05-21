@@ -1,9 +1,10 @@
 
 import java.util.ArrayList;
-private boolean wasMoved;
 
 public class King extends Piece
 {
+	private boolean wasMoved;
+	
 	public King(int x, int y) {
 		super(x, y);
 	}
@@ -15,7 +16,7 @@ public class King extends Piece
 		wasMoved = moved;
 	}
 	public boolean getWasMoved(){
-		wasMoved = true;
+		return wasMoved;
 	}
 	public King reverse() {
 		return new King(super.reverse());
