@@ -126,9 +126,9 @@ public abstract class Piece extends Position{
 	 * @param enemies
 	 * @return True if move was successful, false otherwise
 	 */
-	public boolean move(Position position, ArrayList<Piece> enemies) {
+	public boolean move(Position position, Player player) {
 		if(possiblePositions.contains(position)) {
-			enemies.remove(position);
+			player.remove(position);
 			set(position);
 			return true;
 		}

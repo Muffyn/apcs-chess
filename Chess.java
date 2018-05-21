@@ -19,10 +19,12 @@ enum Player {
 	
 	private String color;
 	private ArrayList<Piece> pieces;
+	private ArrayList<Piece> capturedPieces;
 	
 	private Player(String color) {
 		this.color= color;
 		pieces= new ArrayList<Piece>();
+		capturedPieces= new ArrayList<Piece>();
 	}
 	
 	public Player getNext() {
@@ -44,6 +46,22 @@ enum Player {
 	
 	public void setPieces(ArrayList<Piece> pieces) {
 		this.pieces= pieces;
+	}
+	
+	public ArrayList<Piece> getCapturedPieces() {
+		return capturedPieces;
+	}
+	
+	public void setCapturedPieces(ArrayList<Piece> pieces) {
+		capturedPieces= pieces;
+	}
+	
+	public void remove(Position position) {
+		if(pieces.contains(position)) {
+			Piece piece= pieces.remove(pieces.indexOf(position));
+			piece.set(-capturedPieces.size() / 4 - 1, 7 - capturedPieces.size() % 4);
+			capturedPieces.add(piece);
+		}
 	}
 }
 
@@ -114,9 +132,9 @@ public class Chess extends JPanel {
 		
 		setPieces();
 		
-		for(Piece piece : player.getPieces()) {
-			piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces());
-		}
+		player.getPieces().forEach(piece -> 
+			piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces())
+		);
 		
 		label= new JLabel();
 		label.setText(player + "\'s turn");
@@ -148,12 +166,11 @@ public class Chess extends JPanel {
 						if(index >= 0 && pieces.get(index).getPossiblePositions().size() > 0)
 						{
 							selectedPiece= pieces.get(index);
-							repaint();
 						}
 						else { 
 							if(selectedPiece != null)
 							{
-								if(selectedPiece.move(position, player.getNext().getPieces())) {
+								if(selectedPiece.move(position, player.getNext())) {
 									
 									//Checks to see if the next player is in check
 									inCheck= false;
@@ -168,6 +185,7 @@ public class Chess extends JPanel {
 									//Reverses all of the pieces
 									for(Player p : Player.values()) {
 										p.setPieces(Piece.reverse(p.getPieces()));
+										p.setCapturedPieces(Piece.reverse(p.getCapturedPieces()));
 									}
 									
 									//Sets up for the next player's turn
@@ -191,13 +209,11 @@ public class Chess extends JPanel {
 								}
 								selectedPiece= null;
 							}
-							repaint();
 						}
 				    }
 				    else if(e.getButton() == MouseEvent.BUTTON3)
 				    {
 				        selectedPiece= null;
-				        repaint();
 				    }
 				}
 			}
@@ -219,6 +235,7 @@ public class Chess extends JPanel {
 		
 		for(Player p : Player.values()) {
 			drawPieces(p.getPieces(), g, p.getColor(), length, translation);
+			drawPieces(p.getCapturedPieces(), g, p.getColor(), length, translation);
 		}
 		
 		if(inCheck) {
@@ -235,6 +252,7 @@ public class Chess extends JPanel {
 				}
 			});
 		}
+		repaint();
 	}
 	
 	/**
@@ -245,6 +263,8 @@ public class Chess extends JPanel {
 		ArrayList<Piece> blackPieces= Player.PLAYER2.getPieces();
 		
 		//Note: Kings must be added first
+		
+		//the top left of the board is (0, 0)
 		
 		whitePieces.add(new King(4, 7));
 		blackPieces.add(new King(4, 0));
