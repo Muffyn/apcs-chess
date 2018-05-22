@@ -1,4 +1,6 @@
 import java.awt.Color;
+import java.awt.Container;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -75,6 +77,8 @@ public class Chess extends JPanel {
 	
 	private JLabel label;
 	
+	private final boolean multiplayer;
+	
 	/**
 	 * Draws the board
 	 * @param g
@@ -108,7 +112,7 @@ public class Chess extends JPanel {
 	}
 	
 	/**
-	 * Draws all of the piece
+	 * Draws all of the pieces
 	 * @param pieces
 	 * @param g
 	 * @param color
@@ -126,25 +130,21 @@ public class Chess extends JPanel {
 		});
 	}
 	
-<<<<<<< HEAD
-	public Chess() {
-		
-=======
 	public Chess(boolean multiplayer) {
->>>>>>> 8da5d16b4d1ce016815ac39564d94a58801452d7
-		player= Player.PLAYER1;
 		
+		this.multiplayer= multiplayer;
+		player= Player.PLAYER1;
 		setPieces();
 		
 		player.getPieces().forEach(piece -> 
 			piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces())
 		);
 		
-		label= new JLabel();
-		label.setText(player + "\'s turn");
-		add(label);
-		
-		AI computer = new AI();
+		if(multiplayer) {
+			label= new JLabel();
+			label.setText(player + "\'s turn");
+			add(label);
+		}
 		
 		addMouseListener(new MouseListener()
 		{
@@ -160,13 +160,7 @@ public class Chess extends JPanel {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				Point point = getMousePosition();
-<<<<<<< HEAD
 				if(point != null) {
-=======
-				
-				if(point != null) {
-				
->>>>>>> 8da5d16b4d1ce016815ac39564d94a58801452d7
 					int squareLength = getHeight() / 8;
 					int positionX = (int)(point.getX() - (getWidth() / 2 - squareLength * 4)) / squareLength;
 					int positionY = (int)(point.getY() / squareLength);
@@ -175,86 +169,27 @@ public class Chess extends JPanel {
 				    {
 						ArrayList<Piece> pieces= player.getPieces();
 						int index= pieces.indexOf(position);
-<<<<<<< HEAD
 						if(index >= 0 && pieces.get(index).getPossiblePositions().size() > 0)
-=======
-						if(index >= 0)
->>>>>>> 8da5d16b4d1ce016815ac39564d94a58801452d7
 						{
 							selectedPiece= pieces.get(index);
 						}
 						else { 
 							if(selectedPiece != null)
 							{
-<<<<<<< HEAD
 								if(selectedPiece.move(position, player.getNext())) {
+									nextTurn();
 									
-									//Checks to see if the next player is in check
-									inCheck= false;
-									for(Piece piece : player.getPieces()) {
-										if(piece.setPossiblePositions(pieces, player.getNext().getPieces())
-												.contains(player.getNext().getPieces().get(0))) {
-											inCheck= true;
-											break;
-										}
-									}
-									
-									//Reverses all of the pieces
-									for(Player p : Player.values()) {
-										p.setPieces(Piece.reverse(p.getPieces()));
-										p.setCapturedPieces(Piece.reverse(p.getCapturedPieces()));
-									}
-									
-									//Sets up for the next player's turn
-									player= player.getNext();
+									//Ends the game if no moves are possible
 									int totalPossiblePositions= 0;
 									for(Piece piece : player.getPieces()) {
-										piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces());
-										piece.checkPossiblePositions(player.getPieces(), player.getNext().getPieces());
 										totalPossiblePositions+= piece.getPossiblePositions().size();
 									}
-									label.setText(player + "\'s turn");
-									
-									//Ends the game
 									if(totalPossiblePositions == 0) {
-										if(inCheck) {
-											System.out.print(player.getNext() + " wins");
-										} else {
-											System.out.print("It's a tie");
-										}
-=======
-								if(selectedPiece.move(position, player.getNext().getPieces())) {
-									for(Player p : Player.values()) {
-										p.setPieces(Piece.reverse(p.getPieces()));
-									}
-									
-									if(!multiplayer) {
-										computer.move();
-										
-										for(Player p : Player.values())
-											p.setPieces(Piece.reverse(p.getPieces()));
-										
-										player = player.PLAYER1;
-										
-										int totalPossiblePositions= 0;
-										for(Piece piece : player.getPieces()) {
-											piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces());
-											//piece.checkPossiblePositions(player.getPieces(), player.getNext().getPieces());
-											totalPossiblePositions+= piece.getPossiblePositions().size();
-										}
-									}
-									
-									else {
-										
-										player= player.getNext();
-										int totalPossiblePositions= 0;
-										for(Piece piece : player.getPieces()) {
-											piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces());
-											//piece.checkPossiblePositions(player.getPieces(), player.getNext().getPieces());
-											totalPossiblePositions+= piece.getPossiblePositions().size();
-										}
-									
->>>>>>> 8da5d16b4d1ce016815ac39564d94a58801452d7
+										endGame();
+									//makes a move using AI
+									} else if(!multiplayer) {
+										AI.move();
+										nextTurn();
 									}
 								}
 								selectedPiece= null;
@@ -278,8 +213,10 @@ public class Chess extends JPanel {
 		int length= getHeight() / 8;
 		int translation= getWidth() / 2 - (length * 4);
 		
-		label.setBounds(5, 0, translation, translation / 5);
-		label.setFont(new Font(null, 0, translation / 8));
+		if(multiplayer) {
+			label.setBounds(5, 0, translation, translation / 5);
+			label.setFont(new Font(null, 0, translation / 8));
+		}
 		
 		drawBoard(g, length, translation);
 		
@@ -305,6 +242,73 @@ public class Chess extends JPanel {
 		repaint();
 	}
 	
+	public void endGame() {
+		JLabel newLabel= new JLabel();
+		
+		newLabel.setOpaque(true);
+		add(newLabel);
+		
+		if(multiplayer) {
+			label.setText("");
+		}
+		
+		if(inCheck) {
+			newLabel.setText(player.getNext() + " wins");
+		} else {
+			newLabel.setText("It's a tie");
+		}
+		repaint();
+		
+		Container panel= this;
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Thread.sleep(2500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Player.PLAYER1.getPieces().clear();
+				Player.PLAYER1.getCapturedPieces().clear();
+				Player.PLAYER2.getPieces().clear();
+				Player.PLAYER2.getCapturedPieces().clear();
+				Container frame= getParent();
+				frame.remove(panel);
+				//frame.add(new Menu());
+				frame.repaint();
+			}
+		});
+	}
+	
+	public void nextTurn() {
+		//Checks to see if the next player is in check
+		inCheck= false;
+		for(Piece piece : player.getPieces()) {
+			if(piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces())
+					.contains(player.getNext().getPieces().get(0))) {
+				inCheck= true;
+				break;
+			}
+		}
+		
+		//Reverses all of the pieces
+		for(Player p : Player.values()) {
+			p.setPieces(Piece.reverse(p.getPieces()));
+			p.setCapturedPieces(Piece.reverse(p.getCapturedPieces()));
+		}
+		
+		//Sets up for the next player's turn
+		player= player.getNext();
+		for(Piece piece : player.getPieces()) {
+			piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces());
+			piece.checkPossiblePositions(player.getPieces(), player.getNext().getPieces());
+		}
+		
+		if(multiplayer) {
+			label.setText(player + "\'s turn");
+		}
+	}
+	
 	/**
 	 * Adds all of the pieces to their original positions
 	 */
@@ -316,8 +320,8 @@ public class Chess extends JPanel {
 		
 		//the top left of the board is (0, 0)
 		
-		//whitePieces.add(new King(4, 7));
-		//blackPieces.add(new King(4, 0));
+		whitePieces.add(new King(4, 7));
+		blackPieces.add(new King(4, 0));
 		
 		whitePieces.add(new Queen(3, 7));
 		blackPieces.add(new Queen(3, 0));
@@ -331,12 +335,11 @@ public class Chess extends JPanel {
 		whitePieces.add(new Bishop(5, 7));
 		blackPieces.add(new Bishop(2, 0));
 		blackPieces.add(new Bishop(5, 0));
-
 	}
 	
 	public static void main(String[] args) {
 		JFrame frame= new JFrame();
-		frame.add(new Chess(false));
+		frame.add(new Chess(true));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setBounds(100, 100, 450, 300);
 		frame.setVisible(true);

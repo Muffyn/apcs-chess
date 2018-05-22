@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 public abstract class Piece extends Position{
 	private ArrayList<Position> possiblePositions;
+	private int value;
 	
 	public static final int UP= 		0;
 	public static final int UP_RIGHT= 	1;
@@ -87,9 +88,9 @@ public abstract class Piece extends Position{
 	 */
 	public static ArrayList<Piece> reverse(ArrayList<Piece> pieces) {
 		ArrayList<Piece> newPieces= new ArrayList<Piece>();
-		pieces.forEach(piece -> {
-			newPieces.add(piece.reverse());
-		});
+		pieces.forEach(piece -> 
+			newPieces.add(piece.reverse())
+		);
 		return newPieces;
 	}
 	
@@ -109,6 +110,14 @@ public abstract class Piece extends Position{
 	
 	public Piece(Position position) {
 		this(position.getX(), position.getY());
+	}
+	
+	public int getValue() {
+		return value;
+	}
+	
+	public void setValue(int value) {
+		this.value= value;
 	}
 
 	public Piece reverse() {
@@ -136,7 +145,7 @@ public abstract class Piece extends Position{
 	}
 	
 	/**
-	 * Removes any possible positions that would result in putting piece in check
+	 * Removes any possible positions that would result in putting king in check
 	 * @param allies
 	 * @param enemies
 	 */
