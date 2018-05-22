@@ -126,8 +126,12 @@ public class Chess extends JPanel {
 		});
 	}
 	
+<<<<<<< HEAD
 	public Chess() {
 		
+=======
+	public Chess(boolean multiplayer) {
+>>>>>>> 8da5d16b4d1ce016815ac39564d94a58801452d7
 		player= Player.PLAYER1;
 		
 		setPieces();
@@ -139,6 +143,8 @@ public class Chess extends JPanel {
 		label= new JLabel();
 		label.setText(player + "\'s turn");
 		add(label);
+		
+		AI computer = new AI();
 		
 		addMouseListener(new MouseListener()
 		{
@@ -154,7 +160,13 @@ public class Chess extends JPanel {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				Point point = getMousePosition();
+<<<<<<< HEAD
 				if(point != null) {
+=======
+				
+				if(point != null) {
+				
+>>>>>>> 8da5d16b4d1ce016815ac39564d94a58801452d7
 					int squareLength = getHeight() / 8;
 					int positionX = (int)(point.getX() - (getWidth() / 2 - squareLength * 4)) / squareLength;
 					int positionY = (int)(point.getY() / squareLength);
@@ -163,13 +175,18 @@ public class Chess extends JPanel {
 				    {
 						ArrayList<Piece> pieces= player.getPieces();
 						int index= pieces.indexOf(position);
+<<<<<<< HEAD
 						if(index >= 0 && pieces.get(index).getPossiblePositions().size() > 0)
+=======
+						if(index >= 0)
+>>>>>>> 8da5d16b4d1ce016815ac39564d94a58801452d7
 						{
 							selectedPiece= pieces.get(index);
 						}
 						else { 
 							if(selectedPiece != null)
 							{
+<<<<<<< HEAD
 								if(selectedPiece.move(position, player.getNext())) {
 									
 									//Checks to see if the next player is in check
@@ -205,6 +222,39 @@ public class Chess extends JPanel {
 										} else {
 											System.out.print("It's a tie");
 										}
+=======
+								if(selectedPiece.move(position, player.getNext().getPieces())) {
+									for(Player p : Player.values()) {
+										p.setPieces(Piece.reverse(p.getPieces()));
+									}
+									
+									if(!multiplayer) {
+										computer.move();
+										
+										for(Player p : Player.values())
+											p.setPieces(Piece.reverse(p.getPieces()));
+										
+										player = player.PLAYER1;
+										
+										int totalPossiblePositions= 0;
+										for(Piece piece : player.getPieces()) {
+											piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces());
+											//piece.checkPossiblePositions(player.getPieces(), player.getNext().getPieces());
+											totalPossiblePositions+= piece.getPossiblePositions().size();
+										}
+									}
+									
+									else {
+										
+										player= player.getNext();
+										int totalPossiblePositions= 0;
+										for(Piece piece : player.getPieces()) {
+											piece.setPossiblePositions(player.getPieces(), player.getNext().getPieces());
+											//piece.checkPossiblePositions(player.getPieces(), player.getNext().getPieces());
+											totalPossiblePositions+= piece.getPossiblePositions().size();
+										}
+									
+>>>>>>> 8da5d16b4d1ce016815ac39564d94a58801452d7
 									}
 								}
 								selectedPiece= null;
@@ -266,8 +316,8 @@ public class Chess extends JPanel {
 		
 		//the top left of the board is (0, 0)
 		
-		whitePieces.add(new King(4, 7));
-		blackPieces.add(new King(4, 0));
+		//whitePieces.add(new King(4, 7));
+		//blackPieces.add(new King(4, 0));
 		
 		whitePieces.add(new Queen(3, 7));
 		blackPieces.add(new Queen(3, 0));
@@ -286,7 +336,7 @@ public class Chess extends JPanel {
 	
 	public static void main(String[] args) {
 		JFrame frame= new JFrame();
-		frame.add(new Chess());
+		frame.add(new Chess(false));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setBounds(100, 100, 450, 300);
 		frame.setVisible(true);

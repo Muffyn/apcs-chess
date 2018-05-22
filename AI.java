@@ -7,15 +7,28 @@ public class AI
 	public AI()
 	{
 		comp = Player.PLAYER2;
-		
+	
+	}
+	
+	public void move()
+	{
 		for(Piece piece : comp.getPieces()) 
 		{
 			piece.setPossiblePositions(comp.getPieces(), comp.getNext().getPieces());
 		}
-	}
-	
-	public static void move()
-	{
+		
+		Piece selected = comp.getPieces().get((int)(Math.random() * comp.getPieces().size()));
+		
+		Position newLoc = selected.getPossiblePositions().get((int)(Math.random() * selected.getPossiblePositions().size()));
+		
+		selected.move(newLoc, comp.getNext().getPieces());
+		
+		int totalPossiblePositions= 0;
+		for(Piece piece : comp.getPieces()) {
+			piece.setPossiblePositions(comp.getPieces(), comp.getNext().getPieces());
+			//piece.checkPossiblePositions(player.getPieces(), player.getNext().getPieces());
+			totalPossiblePositions+= piece.getPossiblePositions().size();
+		}
 		
 		
 		
@@ -23,11 +36,6 @@ public class AI
 		
 		
 		
-		
-		
-		
-		
-		
-		Chess.setPlayer(comp.getNext()); //switch turn
+		//Chess.setPlayer(comp.getNext()); //switch turn
 	}
 }
