@@ -330,6 +330,11 @@ public class Chess extends JPanel {
 		whitePieces.add(new Queen(3, 7));
 		blackPieces.add(new Queen(3, 0));
 		
+		whitePieces.add(new Knight(6, 7));
+		whitePieces.add(new Knight(1, 7));
+		blackPieces.add(new Knight(1, 0));
+		blackPieces.add(new Knight(6, 0));
+		
 		whitePieces.add(new Rook(0, 7));
 		whitePieces.add(new Rook(7, 7));
 		blackPieces.add(new Rook(0, 0));

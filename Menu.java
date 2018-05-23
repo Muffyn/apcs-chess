@@ -1,17 +1,16 @@
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
 public class Menu extends JFrame
 {
-	
-	private JButton start, credits, settings, exit;
-	
 	private JPanel menuPanel;
 	
-	private ActionListener click;
+	private String[] names = {"Single Player", "Multiplayer", "Credits", "Exit"};
+	private JButton[] buttons = new JButton[names.length];
 	
 	//need side display of pieces that have been removed from the board
 	
@@ -20,32 +19,62 @@ public class Menu extends JFrame
 		menuPanel = new JPanel();
 		menuPanel.setBounds( 100, 100, 450, 300 );
 		
-		start = new JButton( "Start" );
-		credits = new JButton( "Credits" );
-		settings = new JButton ( "Settings" );
-		exit = new JButton ( "Exit" );
-		
-		menuPanel.add( start );
-		menuPanel.add( credits );
-		menuPanel.add( settings );
-		menuPanel.add( exit );
+		for(int k = 0; k < names.length; k ++)
+		{
+			buttons[k] = new JButton(names[k]);
+			buttons[k].addActionListener(new ButtonHandler());
+
+			menuPanel.add( buttons[k] );
+			buttons[k].setVisible(true);
+		}
 
 		add(menuPanel);
-		
-		start.addActionListener(click);
-		settings.addActionListener(click);
-		credits.addActionListener(click);
-		exit.addActionListener(click);
-		
-		start.setVisible(true);
-		credits.setVisible(true);
-		settings.setVisible(true);
-		exit.setVisible(true);
+
 	}
 	
+	private class ButtonHandler implements ActionListener
+	{
+		public void actionPerformed(ActionEvent actionEvent)
+		{
+			String btnText = "";
+			
+			for(int x = 0; x < names.length; x++)
+			{
+				if((JButton)actionEvent.getSource() == buttons[x])
+				{
+					btnText = names[x];
+					break;
+					//gets text from button pressed
+				}
+			}
+			
+			if(btnText.equals("Single Player"))
+			{
+				JFrame frame= new JFrame();
+				frame.add(new Chess(false));
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				frame.setBounds(100, 100, 450, 300);
+				frame.setVisible(true);
+			}
+			else if(btnText.equals("Multiplayer"))
+			{
+				JFrame frame= new JFrame();
+				frame.add(new Chess(true));
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				frame.setBounds(100, 100, 450, 300);
+				frame.setVisible(true);
+			}
+			else if(btnText.equals("Exit"))
+			{
+				System.exit(0);
+			}
+			else if(btnText.equals("Credits"))
+			{
+				System.out.print("APCS 2017-18 class");
+			}
 	
-	
-	
+		}
+	}
 
 	public static void main (String[] args)
 	{
