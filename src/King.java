@@ -26,7 +26,7 @@ public class King extends Piece
 	}
 	
 	@Override 
-	public boolean move(Position position, Player otherPlayer) {
+	public boolean move(Position position, ArrayList<Piece> enemies) {
 		if(getPossiblePositions().contains(position)){
 			if(position.getX() == 6 && !wasMoved){	//castles from the right
 				rightRook.set(new Position(5, 0));
@@ -34,7 +34,7 @@ public class King extends Piece
 			else if (position.getX() == 2 && !wasMoved){//castles from the left
 				leftRook.set(new Position(3, 0));
 			}
-			otherPlayer.remove(position);
+			enemies.remove(position);
 			set(position);
 			wasMoved = true;
 			return true;
