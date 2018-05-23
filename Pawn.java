@@ -30,12 +30,9 @@ public class Pawn extends Piece{
 			
 		if (first) {
 			for (Position position : Piece.getPositions(this, 0, 2)) {
-				if (allies.contains(position))
+				if (allies.contains(position) || enemies.contains(position))
 					break;
-				else if (enemies.contains(position)) {
-					positions.add(position);
-				}
-				else
+				else 
 					positions.add(position);
 			}
 		}
