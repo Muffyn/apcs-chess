@@ -36,6 +36,7 @@ public class King extends Piece
 			}
 			otherPlayer.remove(position);
 			set(position);
+			wasMoved = true;
 			return true;
 		}
 		return false;
@@ -46,19 +47,21 @@ public class King extends Piece
 		ArrayList<Position> positions = getPossiblePositions();
 		for (int x = 0; x < 8; x++) {
 			for(Position position : Piece.getPositions(this, x, 1)) {
-				if(allies.contains(position)) {
+				if(allies.contains(position)){
+					for(int y = 0; y < allies.size(); y++){
+					if(allies.get(y) instanceof Rook && position.getY() == 0 && !wasMoved){	//puts in possible position if available for castling
+						Rook rook = (Rook)(allies.get(y));
+						if(canMoveRight(rook, allies, enemies) && position.getX() == 7){	//castling from right side
+							positions.add(new Position(6,0));
+							rightRook = rook;
+						}
+						else if(canMoveLeft(rook, allies, enemies) && position.getY() == 0){ //castling from left side
+							positions.add(new Position(0,0));
+							leftRook = rook;
+						}
+					}
+					}
 					break;
-				}
-				else if(allies.get(x) instanceof Rook && position.getY() == 0){	//puts in possible position if available for castling
-					Rook rook = (Rook)(allies.get(x));
-					if(canMoveRight(rook, allies, enemies) && position.getX() == 7){	//castling from right side
-						positions.add(new Position(6,0));
-						rightRook = rook;
-					}
-					else if(canMoveLeft(rook, allies, enemies) && position.getY() == 0){ //castling from left side
-						positions.add(new Position(0,0));
-						leftRook = rook;
-					}
 				}
 				else if(enemies.contains(position)) {
 					positions.add(position);
