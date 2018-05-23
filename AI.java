@@ -15,9 +15,15 @@ public class AI
 		for(Piece piece : comp.getPieces()) 
 		{
 			piece.setPossiblePositions(comp.getPieces(), comp.getNext().getPieces());
+			piece.checkPossiblePositions(comp.getPieces(), comp.getNext().getPieces());
 		}
 		
 		Piece selected = comp.getPieces().get((int)(Math.random() * comp.getPieces().size()));
+		
+		while(selected.getPossiblePositions().size() == 0)
+		{
+			selected = comp.getPieces().get((int)(Math.random() * comp.getPieces().size()));
+		}
 		
 		Position newLoc = selected.getPossiblePositions().get((int)(Math.random() * selected.getPossiblePositions().size()));
 		
