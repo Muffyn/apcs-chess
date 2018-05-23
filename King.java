@@ -49,10 +49,12 @@ public class King extends Piece
 		}
 		return false;
 	}
-	public boolean inCheck(ArrayList<Pieces>){
-		if(enemies.getPossiblePositions.contains(this.getPosition))
-			return true;
-		else
-			return false;
+	public boolean inCheck(ArrayList<Piece> enemies){
+		Position pos = new Position (this.getX(), this.getY());
+		for (Piece enemy : enemies) {
+			if(enemy.getPossiblePositions().contains(pos));
+				return true;
+		}
+		return false;
 	}
 }
