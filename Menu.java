@@ -1,12 +1,5 @@
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.awt.Image;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class Menu extends JFrame
@@ -34,12 +27,11 @@ public class Menu extends JFrame
 
 		add(menuPanel);
 		
-		image = new JLabel (new ImageIcon(getClass().getClassLoader().getResource("bin/chess.jpg")));
+		image = new JLabel (new ImageIcon("chess.jpg"));
 		
 		menuPanel.add(image);
-		image.setOpaque(true);
-		image.setVisible(true);
 		
+		image.setVisible(true);
 	}
 	
 	private class ButtonHandler implements ActionListener
