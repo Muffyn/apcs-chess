@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 
 enum Player {
 	PLAYER1("White"), PLAYER2("Black");
@@ -191,8 +192,24 @@ public class Chess extends JPanel {
 										
 										if(piece instanceof Pawn && piece.getY() == 0)
 										{
+											String input = JOptionPane.showInputDialog("Enter what piece you want to promote to (Q for Queen), (K for Knight), \n (B for Bishop), and (R for Rook). Click on the piece again to confirm your selection:");
 											pieces.remove(j);
-											pieces.add(j, new Queen(x, y));
+											switch(input){
+											case "Q":
+												pieces.add(j, new Queen(x, y));
+												break;
+											case "K":
+												pieces.add(j, new Knight(x, y));
+												break;
+											case "B":
+												pieces.add(j, new Bishop(x, y));
+												break;
+											case "R":
+												pieces.add(j, new Rook(x, y));
+												break;
+											default:
+													pieces.add(j, new Queen(x, y));
+											}
 										}
 									}
 									nextTurn();
