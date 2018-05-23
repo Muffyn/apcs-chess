@@ -1,72 +1,49 @@
 import java.util.ArrayList;
 
-public class Pawn extends Piece
-{
-    private boolean wasMoved;
+public class Pawn extends Piece{
 
-    public Pawn(int x, int y) {
-        super(x, y);
-    }
-
-    public Pawn(Position pos) {
-        super(pos);
-    }
-
-    public Pawn reverse() {
-        return new Pawn(super.reverse());
-    }
-
-    @Override
-    public boolean move(Position position, Player otherPlayer)
-    {
-        if(getPossiblePositions().contains(position)) {
-            otherPlayer.remove(position);
-            set(position);
-            wasMoved = true;
-            return true;
-        }
-        return false;
-    }
-@Override
-    public ArrayList<Position> setPossiblePositions(ArrayList<Piece> allies, ArrayList<Piece> enemies) {
-        ArrayList<Position> positions = getPossiblePositions();
-        for (int x = 0; x <= 7; x = 1 + (x*2)) {
-            if(x == 1 || x == 7) {
-                for(Position position : Piece.getPositions(this, x, 1)) {
-                    if(enemies.contains(position))
-                        positions.add(position);
-                    else
-                        break;
-                }
-            }
-            else if(x == 0 && wasMoved == false) {
-                for(int y = 1; y <= 2; y++) {
-                    for(Position position : Piece.getPositions(this, 0, y)) {
-                        if(allies.contains(position)) {
-                            break;
-                        }
-                        else if(enemies.contains(position)) {
-                            break;
-                        } else {
-                            positions.add(position);
-                        }
-                    }
-                }
-            }
-            else
-            {
-            	for(Position position : Piece.getPositions(this, 0, 1)) {
-            		if(allies.contains(position)) {
-                		break;
-                	}
-                	else if(enemies.contains(position)) {
-                    	break;
-                	} else {
-                		positions.add(position);
-                	}
-            	}
-            }
-        }
-        return positions;
-    }
+	private boolean first = true;
+	
+	public Pawn(int x, int y) {
+		super(x, y);
+	}
+	
+	public Pawn(Position pos) {
+		super(pos);
+	}
+	
+	public Pawn reverse() {
+		Pawn pawn = new Pawn(super.reverse());
+		pawn.first = this.first;
+		return pawn;
+	}
+	
+	public ArrayList<Position> setPossiblePositions(ArrayList<Piece> allies, ArrayList<Piece> enemies) {
+		ArrayList<Position> positions = getPossiblePositions();
+		
+		if (!allies.contains(Piece.getPosition(this, 0)) && !enemies.contains(Piece.getPosition(this, 0))) 
+			positions.add(Piece.getPosition(this, 0));
+		if (enemies.contains(Piece.getPosition(this, 1)))
+				positions.add(Piece.getPosition(this, 1));
+		if (enemies.contains(Piece.getPosition(this, 7)))
+				positions.add(Piece.getPosition(this,  7));
+			
+		if (first) {
+			for (Position position : Piece.getPositions(this, 0, 2)) {
+				if (allies.contains(position))
+					break;
+				else if (enemies.contains(position)) {
+					positions.add(position);
+				}
+				else
+					positions.add(position);
+			}
+		}
+		return positions;
+	}
+	
+	public boolean move(Position position, Player otherPlayer) {
+		first = false;
+		return super.move(position, otherPlayer);
+	}
 }
