@@ -343,22 +343,22 @@ public class Chess extends JPanel {
 		blackPieces.add(new King(4, 0));
 		
 		whitePieces.add(new Queen(3, 7));
-		//blackPieces.add(new Queen(3, 0));
+		blackPieces.add(new Queen(3, 0));
 		
 		whitePieces.add(new Knight(6, 7));
 		whitePieces.add(new Knight(1, 7));
-		//blackPieces.add(new Knight(1, 0));
-		//blackPieces.add(new Knight(6, 0));
+		blackPieces.add(new Knight(1, 0));
+		blackPieces.add(new Knight(6, 0));
 		
 		whitePieces.add(new Rook(0, 7));
 		whitePieces.add(new Rook(7, 7));
-		//blackPieces.add(new Rook(0, 0));
-		//blackPieces.add(new Rook(7, 0));
+		blackPieces.add(new Rook(0, 0));
+		blackPieces.add(new Rook(7, 0));
 		
 		whitePieces.add(new Bishop(2, 7));
 		whitePieces.add(new Bishop(5, 7));
-		//blackPieces.add(new Bishop(2, 0));
-		//blackPieces.add(new Bishop(5, 0));
+		blackPieces.add(new Bishop(2, 0));
+		blackPieces.add(new Bishop(5, 0));
 		
 		whitePieces.add(new Pawn(0, 6));
 		whitePieces.add(new Pawn(1, 6));
@@ -369,14 +369,14 @@ public class Chess extends JPanel {
 		whitePieces.add(new Pawn(6, 6));
 		whitePieces.add(new Pawn(7, 6));
 		
-		//blackPieces.add(new Pawn(0, 1));
-		//blackPieces.add(new Pawn(1, 1));
-		//blackPieces.add(new Pawn(2, 1));
-		//blackPieces.add(new Pawn(3, 1));
-		//blackPieces.add(new Pawn(4, 1));
-		//blackPieces.add(new Pawn(5, 1));
-		//blackPieces.add(new Pawn(6, 1));
-		//blackPieces.add(new Pawn(7, 1));
+		blackPieces.add(new Pawn(0, 1));
+		blackPieces.add(new Pawn(1, 1));
+		blackPieces.add(new Pawn(2, 1));
+		blackPieces.add(new Pawn(3, 1));
+		blackPieces.add(new Pawn(4, 1));
+		blackPieces.add(new Pawn(5, 1));
+		blackPieces.add(new Pawn(6, 1));
+		blackPieces.add(new Pawn(7, 1));
 		
 
 	}
