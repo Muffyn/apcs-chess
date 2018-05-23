@@ -52,17 +52,17 @@ public class Menu extends JFrame
 			
 			if(btnText.equals("Single Player"))
 			{
-				JFrame frame= new JFrame();
+				JFrame frame= new JFrame("Chess - Single Player");
 				frame.add(new Chess(false));
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.setBounds(100, 100, 450, 300);
+				frame.setExtendedState(frame.MAXIMIZED_BOTH);
 				frame.setVisible(true);
 				menuPanel.setVisible(false);
 				
 			}
 			else if(btnText.equals("Multiplayer"))
 			{
-				JFrame frame= new JFrame();
+				JFrame frame= new JFrame("Chess - Multi-Player");
 				frame.add(new Chess(true));
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.setBounds(100, 100, 450, 300);
