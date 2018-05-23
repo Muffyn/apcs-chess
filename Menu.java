@@ -1,8 +1,12 @@
-
-import java.awt.*;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.awt.Image;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class Menu extends JFrame
@@ -12,7 +16,7 @@ public class Menu extends JFrame
 	private String[] names = {"Single Player", "Multiplayer", "Credits", "Exit"};
 	private JButton[] buttons = new JButton[names.length];
 	
-	//need side display of pieces that have been removed from the board
+	private JLabel image;
 	
 	public void drawMenu()
 	{
@@ -29,7 +33,13 @@ public class Menu extends JFrame
 		}
 
 		add(menuPanel);
-
+		
+		image = new JLabel (new ImageIcon(getClass().getClassLoader().getResource("bin/chess.jpg")));
+		
+		menuPanel.add(image);
+		image.setOpaque(true);
+		image.setVisible(true);
+		
 	}
 	
 	private class ButtonHandler implements ActionListener
@@ -55,6 +65,8 @@ public class Menu extends JFrame
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.setBounds(100, 100, 450, 300);
 				frame.setVisible(true);
+				menuPanel.setVisible(false);
+				
 			}
 			else if(btnText.equals("Multiplayer"))
 			{
@@ -63,6 +75,7 @@ public class Menu extends JFrame
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.setBounds(100, 100, 450, 300);
 				frame.setVisible(true);
+				menuPanel.setVisible(false);
 			}
 			else if(btnText.equals("Exit"))
 			{
