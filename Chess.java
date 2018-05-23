@@ -77,6 +77,8 @@ public class Chess extends JPanel {
 	
 	private JLabel label;
 	
+	private AI ai;
+	
 	private final boolean multiplayer;
 	
 	/**
@@ -188,7 +190,7 @@ public class Chess extends JPanel {
 										endGame();
 									//makes a move using AI
 									} else if(!multiplayer) {
-										AI.move();
+										ai.move();
 										nextTurn();
 									}
 								}
