@@ -147,6 +147,8 @@ public class Chess extends JPanel {
 			label.setText(player + "\'s turn");
 			add(label);
 		}
+		else
+			ai = new AI();
 		
 		addMouseListener(new MouseListener()
 		{
@@ -341,7 +343,7 @@ public class Chess extends JPanel {
 	
 	public static void main(String[] args) {
 		JFrame frame= new JFrame();
-		frame.add(new Chess(true));
+		frame.add(new Chess(false));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setBounds(100, 100, 450, 300);
 		frame.setVisible(true);
