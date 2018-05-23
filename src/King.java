@@ -49,13 +49,13 @@ public class King extends Piece
 			for(Position position : Piece.getPositions(this, x, 1)) {
 				if(allies.contains(position)){
 					for(int y = 0; y < allies.size(); y++){
-					if(allies.get(y) instanceof Rook && position.getY() == 0 && !wasMoved){	//puts in possible position if available for castling
+					if(allies.get(y) instanceof Rook && position.getY() == 7 && !wasMoved){	//puts in possible position if available for castling
 						Rook rook = (Rook)(allies.get(y));
 						if(canMoveRight(rook, allies, enemies) && position.getX() == 7){	//castling from right side
 							positions.add(new Position(6,0));
 							rightRook = rook;
 						}
-						else if(canMoveLeft(rook, allies, enemies) && position.getY() == 0){ //castling from left side
+						else if(canMoveLeft(rook, allies, enemies) && position.getX() == 0){ //castling from left side
 							positions.add(new Position(0,0));
 							leftRook = rook;
 						}
