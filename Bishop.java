@@ -11,7 +11,7 @@ public class Bishop extends Piece{
 	}
 	
 	public Bishop reverse() {
-		return new Bishop(this);
+		return new Bishop(super.reverse());
 	}
 	
 	public ArrayList<Position> setPossiblePositions(ArrayList<Piece> allies, ArrayList<Piece> enemies) {
