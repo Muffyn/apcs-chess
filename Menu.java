@@ -65,7 +65,7 @@ public class Menu extends JFrame
 				JFrame frame= new JFrame("Chess - Multi-Player");
 				frame.add(new Chess(true));
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.setBounds(100, 100, 450, 300);
+				frame.setExtendedState(frame.MAXIMIZED_BOTH);
 				frame.setVisible(true);
 				menuPanel.setVisible(false);
 			}
@@ -85,7 +85,7 @@ public class Menu extends JFrame
 	{
 		Menu s = new Menu();
 		s.drawMenu();
-		s.setBounds( 100, 100, 450, 300 );
+		s.setBounds(750, 350, 450, 300);
 		s.setTitle("Menu");
 		s.setVisible(true);
 	}
