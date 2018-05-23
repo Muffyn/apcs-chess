@@ -21,7 +21,7 @@ public class AI
 		
 		Position newLoc = selected.getPossiblePositions().get((int)(Math.random() * selected.getPossiblePositions().size()));
 		
-		selected.move(newLoc, comp.getNext().getPieces());
+		selected.move(newLoc, comp.getNext());
 		
 		int totalPossiblePositions= 0;
 		for(Piece piece : comp.getPieces()) {
